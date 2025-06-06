@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conseil des Ombres</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #1e1e2f, #2b2b44);
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+    #container {
+      max-width: 900px;
+      margin: auto;
+      background: #26263a;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      font-size: 2.8em;
+      margin-bottom: 10px;
+      color: #f8c037;
+    }
+    input, select, button {
+      font-size: 16px;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+      width: 80%;
+      max-width: 400px;
+    }
+    button {
+      background-color: #f8c037;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #e0aa2b;
+    }
+    #resultsTable {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+    }
+    #resultsTable th, #resultsTable td {
+      border: 1px solid #888;
+      padding: 12px;
+    }
+    #resultsTable th {
+      background-color: #44445c;
+      color: #f8c037;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>🕵️ Conseil des Ombres 🕵️</h1>
+    <p>Entre ton rôle et ton code secret pour soumettre ta décision hebdomadaire.</p>
+    <select id="roleSelect">
+      <option value="">-- Choisir ton rôle --</option>
+      <option value="loups">🐺 Loups-Garous</option>
+      <option value="sorciere">🧙‍♀️ Sorcière</option>
+      <option value="mime">🤐 Mime</option>
+      <option value="corbeau">🐦 Corbeau</option>
+      <option value="flute">🎶 Joueur de Flûte</option>
+      <option value="salvateur">🛡 Salvateur</option>
+    </select><br>
+    <input type="password" id="roleCode" placeholder="Mot de passe du rôle" /><br>
+    <input type="text" id="decisionInput" placeholder="Ta décision (ex: nom du joueur)" /><br>
+    <button onclick="submitDecision()">Soumettre</button>
+
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Rôle</th>
+          <th>Décision - Semaine 1</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody">
+        <tr><td>🐺 Loups-Garous</td><td id="loupsDecision">-</td></tr>
+        <tr><td>🧙‍♀️ Sorcière</td><td id="sorciereDecision">-</td></tr>
+        <tr><td>🤐 Mime</td><td id="mimeDecision">-</td></tr>
+        <tr><td>🐦 Corbeau</td><td id="corbeauDecision">-</td></tr>
+        <tr><td>🎶 Joueur de Flûte</td><td id="fluteDecision">-</td></tr>
+        <tr><td>🛡 Salvateur</td><td id="salvateurDecision">-</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const passwords = {
+      loups: "LOUPS2024",
+      sorciere: "SORCIERE2024",
+      mime: "MIME2024",
+      corbeau: "CORBEAU2024",
+      flute: "FLUTE2024",
+      salvateur: "SALVATEUR2024"
+    };
+
+    function submitDecision() {
+      const role = document.getElementById("roleSelect").value;
+      const code = document.getElementById("roleCode").value;
+      const decision = document.getElementById("decisionInput").value;
+
+      if (!role || !code || !decision) {
+        alert("Merci de remplir tous les champs.");
+        return;
+      }
+
+      if (passwords[role] !== code) {
+        alert("Mot de passe incorrect pour ce rôle.");
+        return;
+      }
+
+      const cellId = role + "Decision";
+      document.getElementById(cellId).innerText = decision;
+      alert("Décision enregistrée pour le rôle " + role + ".");
+
+      // Empêche de re-soumettre depuis le même appareil (optionnel)
+      localStorage.setItem("decision_" + role, decision);
+    }
+
+    window.onload = () => {
+      for (const role in passwords) {
+        const stored = localStorage.getItem("decision_" + role);
+        if (stored) {
+          document.getElementById(role + "Decision").innerText = stored;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
